@@ -1,10 +1,12 @@
 from aiogram import Dispatcher
 from aiogram.types import Message
 
+from aiogram.filters.command import Command
+
 
 async def user_start(message: Message):
     await message.reply("Hello, user!")
 
 
 def register_user(dp: Dispatcher):
-    dp.register_message_handler(user_start, commands=["start"], state="*")
+    dp.message.register(user_start, Command('start'))

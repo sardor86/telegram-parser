@@ -4,24 +4,20 @@ from environs import Env
 
 
 @dataclass
-class DbConfig:
+class Redis:
     host: str
-    password: str
-    user: str
-    database: str
+    port: int
 
 
 @dataclass
 class TgBot:
     token: str
-    admin_ids: list[int]
-    use_redis: bool
 
 
 @dataclass
 class Config:
     tg_bot: TgBot
-    db: DbConfig
+    redis: Redis
 
 
 def load_config(path: str = None):
@@ -30,14 +26,10 @@ def load_config(path: str = None):
 
     return Config(
         tg_bot=TgBot(
-            token=env.str("BOT_TOKEN"),
-            admin_ids=list(map(int, env.str("ADMINS").split(","))),
-            use_redis=env.bool("USE_REDIS"),
+            token=env.str("BOT_TOKEN")
         ),
-        db=DbConfig(
-            host=env.str('DB_HOST'),
-            password=env.str('DB_PASS'),
-            user=env.str('DB_USER'),
-            database=env.str('DB_NAME')
+        redis=Redis(
+            host=env.str('REDIS_HOST'),
+            port=env.str('REDIS_PORT')
         )
     )
