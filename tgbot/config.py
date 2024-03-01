@@ -13,11 +13,16 @@ class Redis:
 class TgBot:
     token: str
 
+@dataclass
+class ParserApi:
+    tm_api: str
+
 
 @dataclass
 class Config:
     tg_bot: TgBot
     redis: Redis
+    parsers_api: ParserApi
 
 
 def load_config(path: str = None):
@@ -31,5 +36,8 @@ def load_config(path: str = None):
         redis=Redis(
             host=env.str('REDIS_HOST'),
             port=env.str('REDIS_PORT')
+        ),
+        parsers_api=ParserApi(
+            tm_api=env.str('TM_API_KEY')
         )
     )

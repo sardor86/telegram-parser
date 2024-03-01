@@ -1,3 +1,10 @@
-aiogram
+aiogram~=3.4.1
 aioredis
-environs
+environs~=10.3.0
+
+selenium~=4.18.1
+requests~=2.31.0
+webdriver-manager~=4.0.1
+
+beautifulsoup4~=4.12.3
+googletrans~=3.1.0a0

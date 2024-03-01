@@ -2,11 +2,12 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, Redis
 
 from tgbot.config import load_config
 from tgbot.handlers import register_all_handlers
+
+from parsers import AliexpressParser, TMParser, WikkeoParser
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +25,10 @@ async def main():
     bot.config = config
     dp = Dispatcher(storage=storage)
     register_all_handlers(dp)
+
+    bot.aliexpress_parser = AliexpressParser()
+    bot.tm_parser = TMParser(bot.config.parsers_api.tm_api)
+    bot.wikkeo_parser = WikkeoParser()
 
     # start
     try:
