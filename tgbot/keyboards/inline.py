@@ -34,7 +34,6 @@ async def choice_category_inline_keyboard(categories_list: list) -> InlineKeyboa
     keyboard = InlineKeyboardBuilder()
 
     for category in categories_list:
-        print(f'{len(f"category_{category}".encode("utf-8"))}: {category}')
         keyboard.row(InlineKeyboardButton(text=category, callback_data=f'category_{category}'))
 
     return keyboard
