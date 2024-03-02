@@ -8,5 +8,5 @@ class ProductParser(StatesGroup):
 
 class ProductListParser(StatesGroup):
     choice_parser = State()
-    start_price = State()
-    end_price = State()
+    min_price = State()
+    max_price = State()

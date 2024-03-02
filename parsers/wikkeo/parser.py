@@ -18,8 +18,8 @@ class WikkeoParser(BaseDriver):
 
         return self.category
 
-    async def get_products_list(self, category: str):
-        self.get(self.category[category])
+    async def get_products_list(self, category: str, min_price: int = 0, max_price: int = 99999999):
+        self.get(f'{self.category[category]}?min_price={min_price}&max_price={max_price}')
         self.driver_sleep(5, 'product-list-block-list-item')
 
         products = []

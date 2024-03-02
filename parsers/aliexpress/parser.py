@@ -29,9 +29,9 @@ class AliexpressParser(BaseDriver):
             self.category[category.text[0:29]] = category.get_attribute('href')
         return self.category
 
-    async def get_products_list(self, category: str) -> list:
+    async def get_products_list(self, category: str, min_price: int = None, max_price: int = None) -> list:
         products_list = []
-        self.get(self.category[category])
+        self.get(f'{self.category[category]}&minPrice={min_price}&maxPrice={max_price}')
 
         try:
             self.driver_sleep(5, 'snow-ali-kit_Button-Secondary__button__4468ot')

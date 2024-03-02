@@ -25,6 +25,7 @@ async def filters_inline_keyboard() -> InlineKeyboardBuilder:
 
     keyboard.row(InlineKeyboardButton(text='Цена', callback_data='filters_price'))
     keyboard.row(InlineKeyboardButton(text='Категории', callback_data='filters_category'))
+    keyboard.row(InlineKeyboardButton(text='Начать парсинг', callback_data='start_pars_product'))
 
     return keyboard
 

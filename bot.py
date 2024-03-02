@@ -28,8 +28,8 @@ async def main():
 
     bot.parser = dict()
     bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
-    bot.parser['aliexpress'] = AliexpressParser()
-    bot.parser['wikkeo'] = WikkeoParser()
+    # bot.parser['aliexpress'] = AliexpressParser()
+    # bot.parser['wikkeo'] = WikkeoParser()
 
     for parser in bot.parser:
         bot.parser[parser].get_category()

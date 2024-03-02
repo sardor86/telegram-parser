@@ -24,15 +24,21 @@ class TMParser:
         for category in categories:
             self.category[self.translate_text(self.decode_text(category.text))[0:29]] = self.decode_text(category.text)
 
-    async def get_products(self, category_name: str):
-        params = {"apiToken": self.api_key,
-                  "page": 1,
-                  "page_size": 20,
-                  "keyword": self.category[category_name],
-                  "sort": "default"}
+    async def get_products_list(self, category_name: str, max_price: int = None, min_price: int = None):
+        params = {'apiToken': self.api_key,
+                  'page': 1,
+                  'page_size': 20,
+                  'keyword': self.category[category_name],
+                  'sort': 'default',
+                  'price_start': min_price,
+                  'price_end': max_price}
 
         result = requests.get('http://api.tmapi.top/1688/search/items', params=params).json()
-        return result
+        product_list = [{
+            'title': self.translate_text(product['title']),
+            'price': product['price']
+        } for product in result['data']['items']]
+        return product_list
 
     async def get_product_details(self, link):
         querystring = {"apiToken": self.api_key}
