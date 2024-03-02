@@ -1,1 +1,1 @@
-from .states import ProductParser
+from .states import ProductParser, ProductListParser

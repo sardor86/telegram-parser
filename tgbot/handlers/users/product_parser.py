@@ -14,7 +14,7 @@ async def choice_parser(callback: CallbackQuery, state: FSMContext) -> None:
 
 
 async def get_product_link(callback: CallbackQuery, state: FSMContext) -> None:
-    await state.update_data(parser=callback.data.split('_')[0])
+    await state.update_data(parser=callback.data)
     await callback.message.edit_text('Отправте ссылку')
     await state.set_state(ProductParser.get_product_link)
 
@@ -23,30 +23,13 @@ async def pars_product(message: Message, state: FSMContext) -> None:
     user_data = await state.get_data()
 
     product_detail = ''
-    if user_data['parser'] == 'aliexpress':
-        product_detail_info = message.bot.aliexpress_parser.get_product_details(message.text)
-        if not product_detail_info is None:
-            product_detail = (f'name: {product_detail_info["name"]}\n'
-                              f'price: {product_detail_info["price"]}\n'
-                              f'category: {product_detail_info["category"]}\n')
-        else:
-            product_detail = 'Не нашли'
-    if user_data['parser'] == '1688':
-        product_detail_info = message.bot.tm_parser.get_product_details(message.text)
-        if not product_detail_info['data'] is None:
-            product_detail = (f'name: {message.bot.tm_parser.translate_text(product_detail_info["data"]["title"])}\n'
-                              f'price: {product_detail_info["data"]["sku_price_scale"]}\n'
-                              f'category_id: {product_detail_info["data"]["category_id"]}')
-        else:
-            product_detail = 'Не нашли'
-    if user_data['parser'] == 'wikkeo':
-        product_detail_info = message.bot.wikkeo_parser.get_product_details(message.text)
-        if not product_detail_info is None:
-            product_detail = (f'name: {product_detail_info["name"]}\n'
-                              f'price: {product_detail_info["price"]}\n'
-                              f'description: {product_detail_info["description"]}')
-        else:
-            product_detail = 'Не нашли'
+    parser = message.bot.parser[user_data['parser']]
+    product_detail_info = await parser.get_product_details(message.text)
+    if not product_detail_info is None:
+        for product_info in product_detail_info:
+            product_detail += f'{product_info}: {product_detail_info[product_info]}\n'
+    else:
+        product_detail = 'Не нашли'
 
     await message.reply(product_detail)
 
@@ -55,8 +38,5 @@ async def pars_product(message: Message, state: FSMContext) -> None:
 
 def register_product_parser(dp: Dispatcher):
     dp.callback_query.register(choice_parser, lambda callback: callback.data == 'pars_product')
-    dp.callback_query.register(get_product_link,
-                               lambda callback: callback.data[-14:] == 'product_parser',
-                               StateFilter('ProductParser:choice_parser'))
-    dp.message.register(pars_product,
-                        StateFilter('ProductParser:get_product_link'))
+    dp.callback_query.register(get_product_link, StateFilter('ProductParser:choice_parser'))
+    dp.message.register(pars_product, StateFilter('ProductParser:get_product_link'))

@@ -26,9 +26,13 @@ async def main():
     dp = Dispatcher(storage=storage)
     register_all_handlers(dp)
 
-    bot.aliexpress_parser = AliexpressParser()
-    bot.tm_parser = TMParser(bot.config.parsers_api.tm_api)
-    bot.wikkeo_parser = WikkeoParser()
+    bot.parser = dict()
+    bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
+    bot.parser['aliexpress'] = AliexpressParser()
+    bot.parser['wikkeo'] = WikkeoParser()
+
+    for parser in bot.parser:
+        bot.parser[parser].get_category()
 
     # start
     try:

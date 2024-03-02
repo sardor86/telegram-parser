@@ -13,8 +13,27 @@ async def get_start_inline_keyboard() -> InlineKeyboardBuilder:
 async def choice_parser_inline_keyboard() -> InlineKeyboardBuilder:
     keyboard = InlineKeyboardBuilder()
 
-    keyboard.row(InlineKeyboardButton(text='Aliexpress', callback_data='aliexpress_product_parser'))
-    keyboard.row(InlineKeyboardButton(text='1688', callback_data='1688_product_parser'))
-    keyboard.row(InlineKeyboardButton(text='wikkeo', callback_data='wikkeo_product_parser'))
+    keyboard.row(InlineKeyboardButton(text='Aliexpress', callback_data='aliexpress'))
+    keyboard.row(InlineKeyboardButton(text='1688', callback_data='1688'))
+    keyboard.row(InlineKeyboardButton(text='wikkeo', callback_data='wikkeo'))
+
+    return keyboard
+
+
+async def filters_inline_keyboard() -> InlineKeyboardBuilder:
+    keyboard = InlineKeyboardBuilder()
+
+    keyboard.row(InlineKeyboardButton(text='Цена', callback_data='filters_price'))
+    keyboard.row(InlineKeyboardButton(text='Категории', callback_data='filters_category'))
+
+    return keyboard
+
+
+async def choice_category_inline_keyboard(categories_list: list) -> InlineKeyboardBuilder:
+    keyboard = InlineKeyboardBuilder()
+
+    for category in categories_list:
+        print(f'{len(f"category_{category}".encode("utf-8"))}: {category}')
+        keyboard.row(InlineKeyboardButton(text=category, callback_data=f'category_{category}'))
 
     return keyboard

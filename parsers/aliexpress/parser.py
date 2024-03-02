@@ -26,11 +26,10 @@ class AliexpressParser(BaseDriver):
                                           'RedHeaderCatalogPopup_RedHeaderCatalogPopup_'
                                           '_categories__484gh')
         for category in category_list.find_elements(By.TAG_NAME, 'a'):
-            self.category[category.text] = category.get_attribute('href')
-        print(self.get_cookies())
+            self.category[category.text[0:29]] = category.get_attribute('href')
         return self.category
 
-    def get_products_list(self, category: str) -> list:
+    async def get_products_list(self, category: str) -> list:
         products_list = []
         self.get(self.category[category])
 
@@ -52,7 +51,7 @@ class AliexpressParser(BaseDriver):
             })
         return products_list
 
-    def get_product_details(self, link: str):
+    async def get_product_details(self, link: str):
         try:
             self.get(link)
             self.driver_sleep(5, 'HazeProductDescription_HazeProductDescription__root__8s9ws')

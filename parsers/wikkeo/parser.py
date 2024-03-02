@@ -14,11 +14,11 @@ class WikkeoParser(BaseDriver):
         self.driver_sleep(10, 'header-category__button')
         self.find_element(By.CLASS_NAME, 'header-category__button').click()
         for category in self.find_elements(By.CLASS_NAME, 'categories-block__general-item'):
-            self.category[category.text] = category.find_element(By.TAG_NAME, 'a').get_attribute('href')
+            self.category[category.text[0:29]] = category.find_element(By.TAG_NAME, 'a').get_attribute('href')
 
         return self.category
 
-    def get_products_list(self, category: str):
+    async def get_products_list(self, category: str):
         self.get(self.category[category])
         self.driver_sleep(5, 'product-list-block-list-item')
 
@@ -35,7 +35,7 @@ class WikkeoParser(BaseDriver):
 
         return products
 
-    def get_product_details(self, url):
+    async def get_product_details(self, url):
         try:
             self.get(url)
             self.driver_sleep(5, 'product-header-info__title')
