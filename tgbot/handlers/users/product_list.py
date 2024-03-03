@@ -1,5 +1,3 @@
-import json
-
 from aiogram.dispatcher.dispatcher import Dispatcher
 from aiogram.types import CallbackQuery, Message
 from aiogram.filters.state import StateFilter
