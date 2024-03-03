@@ -19,17 +19,20 @@ async def main():
     )
     logger.info("Starting bot")
     config = load_config(".env")
+    redis = Redis(host=config.redis.host, port=config.redis.port)
 
-    storage = RedisStorage(Redis(host=config.redis.host, port=config.redis.port))
+    storage = RedisStorage(redis)
     bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
     bot.config = config
+    bot.redis = redis
+
     dp = Dispatcher(storage=storage)
     register_all_handlers(dp)
 
     bot.parser = dict()
-    bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
+    # bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
     # bot.parser['aliexpress'] = AliexpressParser()
-    # bot.parser['wikkeo'] = WikkeoParser()
+    bot.parser['wikkeo'] = WikkeoParser()
 
     for parser in bot.parser:
         bot.parser[parser].get_category()

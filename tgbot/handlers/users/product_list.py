@@ -1,3 +1,5 @@
+import json
+
 from aiogram.dispatcher.dispatcher import Dispatcher
 from aiogram.types import CallbackQuery, Message
 from aiogram.filters.state import StateFilter
@@ -5,6 +7,14 @@ from aiogram.fsm.context import FSMContext
 
 from tgbot.keyboards import choice_parser_inline_keyboard, filters_inline_keyboard, choice_category_inline_keyboard
 from tgbot.misc import ProductListParser
+
+
+async def send_filters(message: Message, state: FSMContext):
+    message_answer = 'Фильтры'
+    storage_data = await state.get_data()
+    for filter_data in storage_data:
+        message_answer += f'{filter_data}: {storage_data[filter_data]}\n'
+    await message.edit_text(message_answer, reply_markup=(await filters_inline_keyboard()).as_markup())
 
 
 async def choice_parser(callback: CallbackQuery, state: FSMContext):
@@ -15,9 +25,13 @@ async def choice_parser(callback: CallbackQuery, state: FSMContext):
 
 
 async def set_filters(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text('Фильтры', reply_markup=(await filters_inline_keyboard()).as_markup())
-
     await state.update_data(parser=callback.data)
+    data = await callback.bot.redis.hgetall(f'{callback.from_user.id}:{callback.data}')
+    if data != {}:
+        await state.update_data(category=data[b'category'].decode('utf-8'),
+                                min_price=int(data[b'min_price']),
+                                max_price=int(data[b'max_price']))
+    await send_filters(callback.message, state)
 
 
 async def set_price(callback: CallbackQuery, state: FSMContext):
@@ -38,8 +52,8 @@ async def set_min_price(message: Message, state: FSMContext):
 async def set_max_price(message: Message, state: FSMContext):
     data = await state.get_data()
     if message.text.isdigit():
-        if int(message.text) > int(data['start_price']):
-            await message.reply('Фильтры', reply_markup=(await filters_inline_keyboard()).as_markup())
+        if int(message.text) > int(data['min_price']):
+            await send_filters(message, state)
             await state.update_data(max_price=int(message.text))
 
             await state.set_state(ProductListParser.choice_parser)
@@ -82,6 +96,15 @@ async def start_pars_product(callback: CallbackQuery, state: FSMContext):
                 await callback.bot.send_message(callback.message.chat.id, message[x:x + 4096])
         else:
             await callback.bot.send_message(callback.message.chat.id, message)
+
+        redis_data = {
+            'category': data['category'],
+            'min_price': data['min_price'],
+            'max_price': data['max_price']
+        }
+
+        await callback.bot.redis.hset(f'{callback.from_user.id}:{data["parser"]}', mapping=redis_data)
+
         await state.clear()
     else:
         keyboard = await choice_category_inline_keyboard(list(callback.bot.parser[data['parser']].category))

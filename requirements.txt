@@ -8,3 +8,5 @@ webdriver-manager~=4.0.1
 
 beautifulsoup4~=4.12.3
 googletrans~=3.1.0a0
+
+redis~=5.0.1
