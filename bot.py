@@ -30,8 +30,8 @@ async def main():
     register_all_handlers(dp)
 
     bot.parser = dict()
-    # bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
-    # bot.parser['aliexpress'] = AliexpressParser()
+    bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
+    bot.parser['aliexpress'] = AliexpressParser()
     bot.parser['wikkeo'] = WikkeoParser()
 
     for parser in bot.parser:
