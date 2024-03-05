@@ -8,11 +8,11 @@ from tgbot.misc import ProductListParser
 
 
 async def send_filters(message: Message, state: FSMContext):
-    message_answer = 'Фильтры'
+    message_answer = 'Фильтры\n'
     storage_data = await state.get_data()
     for filter_data in storage_data:
         message_answer += f'{filter_data}: {storage_data[filter_data]}\n'
-    await message.edit_text(message_answer, reply_markup=(await filters_inline_keyboard()).as_markup())
+    await message.reply(message_answer, reply_markup=(await filters_inline_keyboard()).as_markup())
 
 
 async def choice_parser(callback: CallbackQuery, state: FSMContext):
@@ -51,8 +51,8 @@ async def set_max_price(message: Message, state: FSMContext):
     data = await state.get_data()
     if message.text.isdigit():
         if int(message.text) > int(data['min_price']):
-            await send_filters(message, state)
             await state.update_data(max_price=int(message.text))
+            await send_filters(message, state)
 
             await state.set_state(ProductListParser.choice_parser)
         else:
