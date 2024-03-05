@@ -22,6 +22,7 @@ class BaseDriver(webdriver.Chrome):
                 Sec-Fetch-Dest: font
                 Sec-Fetch-Mode: cors
                 Sec-Fetch-Site: cross-site''')
+        chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--headless=new')
 
         super().__init__(service=Service(ChromeDriverManager().install()), options=chrome_options)
