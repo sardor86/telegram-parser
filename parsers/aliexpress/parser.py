@@ -39,14 +39,12 @@ class AliexpressParser(BaseDriver):
         except IndexError:
             pass
 
-        self.driver_sleep(5, 'product-snippet_ProductSnippet__container__1r2its')
+        self.driver_sleep(5, 'product-snippet_ProductSnippet__description__1om491')
 
-        for product in self.find_elements(By.CLASS_NAME, 'product-snippet_ProductSnippet__container__1r2its'):
-            product_description = product.find_element(By.CLASS_NAME, 'product-snippet_ProductSnippet_'
-                                                                      '_description__1r2its')
+        for product in self.find_elements(By.CLASS_NAME, 'product-snippet_ProductSnippet__description__1om491'):
             products_list.append({
-                'link': product_description.find_element(By.TAG_NAME, 'a').get_attribute('href'),
-                'name': product.find_element(By.CLASS_NAME, 'product-snippet_ProductSnippet__name__1r2its').text,
+                'link': product.find_element(By.TAG_NAME, 'a').get_attribute('href'),
+                'name': product.find_element(By.CLASS_NAME, 'product-snippet_ProductSnippet__name__1om491').text,
                 'price': product.find_element(By.CLASS_NAME, 'snow-price_SnowPrice__blockMain__1cmks6').text
             })
         return products_list
