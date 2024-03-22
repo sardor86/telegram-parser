@@ -28,7 +28,6 @@ class AliexpressParser(BaseDriver):
 
         self.driver_sleep(100, 'RedHeaderNavigationItem_RedHeaderNavigationItem_'
                           '_root__91jxr')
-        self.save_screenshot("screenshot1.png")
         self.find_element(By.CLASS_NAME, 'RedHeaderNavigationItem_RedHeaderNavigationItem_'
                           '_root__91jxr').click()
 
@@ -62,7 +61,6 @@ class AliexpressParser(BaseDriver):
                 'name': product.find_element(By.CLASS_NAME, 'product-snippet_ProductSnippet__name__1om491').text,
                 'price': product.find_element(By.CLASS_NAME, 'snow-price_SnowPrice__blockMain__1cmks6').text
             })
-        self.save_screenshot("screenshot.png")
         
         cookies = self.get_cookies()
         with open('cookies.json', 'w') as file:
