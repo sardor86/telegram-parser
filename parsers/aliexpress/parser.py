@@ -1,7 +1,10 @@
-from parsers.aliexpress.driver import BaseDriver
+import json
+from os import path
 
 from selenium.webdriver.common.by import By
 from selenium.common import InvalidArgumentException, NoSuchElementException
+
+from parsers.aliexpress.driver import BaseDriver
 
 
 class AliexpressParser(BaseDriver):
@@ -15,10 +18,17 @@ class AliexpressParser(BaseDriver):
                           'Chrome/111.0.0.0 Safari/537.36'}
 
     def get_category(self):
+        if path.exists("guru99.txt"):
+            with open('cookies.json', 'r') as file:
+                cookies = json.load(file)
+                for cookie in cookies:
+                    self.add_cookie(cookie)
+                
         self.get(self.base_url)
 
         self.driver_sleep(100, 'RedHeaderNavigationItem_RedHeaderNavigationItem_'
                           '_root__91jxr')
+        self.save_screenshot("screenshot1.png")
         self.find_element(By.CLASS_NAME, 'RedHeaderNavigationItem_RedHeaderNavigationItem_'
                           '_root__91jxr').click()
 
@@ -27,6 +37,11 @@ class AliexpressParser(BaseDriver):
                                           '_categories__484gh')
         for category in category_list.find_elements(By.TAG_NAME, 'a'):
             self.category[category.text[0:29]] = category.get_attribute('href')
+        
+        cookies = self.get_cookies()
+        with open('cookies.json', 'w') as file:
+            json.dump(cookies, file)
+        
         return self.category
 
     async def get_products_list(self, category: str, min_price: int = None, max_price: int = None) -> list:
@@ -47,6 +62,12 @@ class AliexpressParser(BaseDriver):
                 'name': product.find_element(By.CLASS_NAME, 'product-snippet_ProductSnippet__name__1om491').text,
                 'price': product.find_element(By.CLASS_NAME, 'snow-price_SnowPrice__blockMain__1cmks6').text
             })
+        self.save_screenshot("screenshot.png")
+        
+        cookies = self.get_cookies()
+        with open('cookies.json', 'w') as file:
+            json.dump(cookies, file)
+            
         return products_list
 
     async def get_product_details(self, link: str):
@@ -59,6 +80,9 @@ class AliexpressParser(BaseDriver):
                                                         'div/div[1]/div[1]/div/div[2]/div[2]')
             category = self.find_element(By.XPATH,
                                          '/html/body/div[2]/div/div[8]').find_elements(By.TAG_NAME, 'li')[-1]
+            cookies = self.get_cookies()
+            with open('cookies.json', 'w') as file:
+                json.dump(cookies, file)
 
             return {
                 'name': product_name.text,
