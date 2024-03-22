@@ -36,7 +36,8 @@ class TMParser:
         result = requests.get('http://api.tmapi.top/1688/search/items', params=params).json()
         product_list = [{
             'title': self.translate_text(product['title']),
-            'price': product['price']
+            'price': product['price'],
+            'url': product['product_url']
         } for product in result['data']['items']]
         return product_list
 
