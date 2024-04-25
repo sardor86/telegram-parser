@@ -13,7 +13,6 @@ async def get_start_inline_keyboard() -> InlineKeyboardBuilder:
 async def choice_parser_inline_keyboard() -> InlineKeyboardBuilder:
     keyboard = InlineKeyboardBuilder()
 
-    keyboard.row(InlineKeyboardButton(text='Aliexpress', callback_data='aliexpress'))
     keyboard.row(InlineKeyboardButton(text='1688', callback_data='1688'))
     keyboard.row(InlineKeyboardButton(text='wikkeo', callback_data='wikkeo'))
 
@@ -35,5 +34,17 @@ async def choice_category_inline_keyboard(categories_list: list) -> InlineKeyboa
 
     for category in categories_list:
         keyboard.row(InlineKeyboardButton(text=category, callback_data=f'category_{category}'))
+
+    return keyboard
+
+
+async def basket_control_inline_keyboard(add_button: bool = True, delete_button: bool = True) -> InlineKeyboardBuilder:
+    keyboard = InlineKeyboardBuilder()
+
+    if add_button:
+        keyboard.row(InlineKeyboardButton(text='Добавить', callback_data='basket_add'))
+
+    if delete_button:
+        keyboard.row(InlineKeyboardButton(text='Удалить', callback_data='basket_delete'))
 
     return keyboard

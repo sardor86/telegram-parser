@@ -7,7 +7,7 @@ from aiogram.fsm.storage.redis import RedisStorage, Redis
 from tgbot.config import load_config
 from tgbot.handlers import register_all_handlers
 
-from parsers import AliexpressParser, TMParser, WikkeoParser
+from parsers import TMParser, WikkeoParser
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +30,7 @@ async def main():
     register_all_handlers(dp)
 
     bot.parser = dict()
-    bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
-    bot.parser['aliexpress'] = AliexpressParser()
+    # bot.parser['1688'] = TMParser(bot.config.parsers_api.tm_api)
     bot.parser['wikkeo'] = WikkeoParser()
 
     for parser in bot.parser:

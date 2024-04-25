@@ -3,4 +3,8 @@ from aiogram.types.keyboard_button import KeyboardButton
 
 
 async def start_reply_button():
-    return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Начать')]], resize_keyboard=True)
+    keyboard = [
+        [KeyboardButton(text='Начать')],
+        [KeyboardButton(text='Корзинка')]
+    ]
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)

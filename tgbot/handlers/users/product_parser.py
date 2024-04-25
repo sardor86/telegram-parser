@@ -25,7 +25,7 @@ async def pars_product(message: Message, state: FSMContext) -> None:
     product_detail = ''
     parser = message.bot.parser[user_data['parser']]
     product_detail_info = await parser.get_product_details(message.text)
-    if not product_detail_info is None:
+    if product_detail_info:
         for product_info in product_detail_info:
             product_detail += f'{product_info}: {product_detail_info[product_info]}\n'
     else:

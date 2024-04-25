@@ -10,3 +10,8 @@ class ProductListParser(StatesGroup):
     choice_parser = State()
     min_price = State()
     max_price = State()
+
+
+class AddProductBasket(StatesGroup):
+    choice_parser = State()
+    get_product_link = State()
