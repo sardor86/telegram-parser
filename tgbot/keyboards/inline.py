@@ -48,3 +48,13 @@ async def basket_control_inline_keyboard(add_button: bool = True, delete_button:
         keyboard.row(InlineKeyboardButton(text='Удалить', callback_data='basket_delete'))
 
     return keyboard
+
+
+async def choice_product_inline_keyboard(products_list: list) -> InlineKeyboardBuilder:
+    keyboard = InlineKeyboardBuilder()
+
+    for product in products_list:
+        keyboard.row(InlineKeyboardButton(text=product['name'],
+                                          callback_data=f'product_{product["url"].split("-")[-1]}'))
+
+    return keyboard

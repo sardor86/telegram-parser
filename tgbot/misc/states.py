@@ -15,3 +15,7 @@ class ProductListParser(StatesGroup):
 class AddProductBasket(StatesGroup):
     choice_parser = State()
     get_product_link = State()
+
+
+class DeleteProductBasket(StatesGroup):
+    choice_product = State()
