@@ -25,18 +25,24 @@ async def get_parser(callback: CallbackQuery, state: FSMContext):
 async def save_product(message: Message, state: FSMContext):
     data = await state.get_data()
     if not (await message.bot.parser[data['parser']].get_product_details(message.text)):
-        await message.reply('Такого товара не существует')
+        await message.reply('Такого товара не существует, попробуйте заново')
         return
-
+    await state.clear()
     basket = await message.bot.redis.get(f'basket-{message.from_user.id}')
+    basket_data = {
+            'url': message.text,
+            'parser': data['parser']
+        }
     if not basket:
-        basket = [message.text]
+        basket = [basket_data]
     else:
         basket = json.loads(basket)
-        basket.append(message.text)
+        if basket_data in basket:
+            await message.reply('Такого товар уже существует в вашем корзинке')
+            return
+        basket.append(basket_data)
     await message.bot.redis.set(f'basket-{message.from_user.id}', json.dumps(basket))
     await message.reply('Сохранено в корзинку')
-    await state.clear()
 
 
 def register_add_basket_handlers(dp: Dispatcher):
