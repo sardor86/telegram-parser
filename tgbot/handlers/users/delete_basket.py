@@ -53,7 +53,7 @@ async def delete_product(callback: CallbackQuery, state: FSMContext):
 
     logger.info('delete product from basket')
     for product in product_list:
-        if product['url'].split('-')[-1] == product_id:
+        if product['url'].split('/')[-1][:-64] == product_id:
             basket.remove({'parser': product['parser'], 'url': product['url']})
             break
 

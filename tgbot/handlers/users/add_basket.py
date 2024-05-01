@@ -52,7 +52,7 @@ async def save_product(message: Message, state: FSMContext):
     await state.clear()
     basket = await message.bot.redis.get(f'basket-{message.from_user.id}')
     basket_data = {
-            'url': message.text,
+            'url': message.text.split('?')[0],
             'parser': data['parser']
         }
 

@@ -55,6 +55,6 @@ async def choice_product_inline_keyboard(products_list: list) -> InlineKeyboardB
 
     for product in products_list:
         keyboard.row(InlineKeyboardButton(text=product['name'],
-                                          callback_data=f'product_{product["url"].split("-")[-1]}'))
+                                          callback_data=f'product_{product["url"].split("/")[-1][:-64]}'))
 
     return keyboard
